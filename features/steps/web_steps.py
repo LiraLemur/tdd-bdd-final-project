@@ -53,26 +53,26 @@ def step_impl(context, text_string):
 @when('I set the "{element_name}" to "{text_string}"')
 def step_impl(context, element_name, text_string):
     element_id = ID_PREFIX + element_name.lower().replace(' ', '_')
-    element = context.driver.find_element(By.ID, element_id)
+    element = context.driver.find_element_by_id(element_id)
     element.clear()
     element.send_keys(text_string)
 
 @when('I select "{text}" in the "{element_name}" dropdown')
 def step_impl(context, text, element_name):
     element_id = ID_PREFIX + element_name.lower().replace(' ', '_')
-    element = Select(context.driver.find_element(By.ID, element_id))
+    element = Select(context.driver.find_element_by_id(element_id))
     element.select_by_visible_text(text)
 
 @then('I should see "{text}" in the "{element_name}" dropdown')
 def step_impl(context, text, element_name):
     element_id = ID_PREFIX + element_name.lower().replace(' ', '_')
-    element = Select(context.driver.find_element(By.ID, element_id))
+    element = Select(context.driver.find_element_by_id(element_id))
     assert(element.first_selected_option.text == text)
 
 @then('the "{element_name}" field should be empty')
 def step_impl(context, element_name):
     element_id = ID_PREFIX + element_name.lower().replace(' ', '_')
-    element = context.driver.find_element(By.ID, element_id)
+    element = context.driver.find_element_by_id(element_id)
     assert(element.get_attribute('value') == u'')
 
 ##################################################################
@@ -136,15 +136,16 @@ def step_impl(context, element_name, text_string):
     element.clear()
     element.send_keys(text_string)
 
+
 @then('I should see "{name}" in the results')
 def step_impl(context, name):
     found = WebDriverWait(context.driver, context.wait_seconds).until(
-        expected_conditions.text_to_be_present_in_element(by.ID, 'search_result'), name)
+        expected_conditions.text_to_be_present_in_element((By.ID, 'search_results'), name))
     assert(found)
 
 @then('I should not see "{name}" in the results')
 def step_impl(context, name):
-    element = context.driver.find_element(By.ID, 'search_results')
+    element = context.driver.find_element_by_id('search_results')
     assert(name not in element.text)
 
 @then('I should see the message "{message}"')
